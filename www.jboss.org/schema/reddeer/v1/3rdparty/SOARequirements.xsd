@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.jboss.org/NS/SOAReq"
+	xmlns:server="http://www.jboss.org/NS/SOAReq" xmlns:rd="http://www.jboss.org/NS/Req">
+
+	<!-- Import basic RedDeer requirements -->
+	<xs:import namespace="http://www.jboss.org/NS/Req" schemaLocation="http://www.jboss.org/schema/reddeer/v1/RedDeerSchema.xsd" />
+
+	<!-- Specify user-requirement -->
+	<xs:element name="server-requirement" type="server:serverRequirementType" substitutionGroup="rd:abstractRequirement">
+		<xs:annotation>
+			<xs:documentation>Some documentation</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<!-- Specify user-requirement -->
+	<xs:element name="runtime-requirement" type="server:runtimeRequirementType" substitutionGroup="rd:abstractRequirement">
+		<xs:annotation>
+			<xs:documentation>Some documentation</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<!-- Specify user-requirement -->
+	<xs:element name="switchyard-requirement" type="server:switchyardRequirementType" substitutionGroup="rd:abstractRequirement">
+		<xs:annotation>
+			<xs:documentation>Some documentation</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<!-- Specify teiid user-requirement -->
+	<xs:element name="teiid-requirement" type="server:teiidRequirementType" substitutionGroup="rd:abstractRequirement">
+		<xs:annotation>
+			<xs:documentation>Requirement for DV server</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<!-- Specify SAP user-requirement -->
+	<xs:element name="sap-requirement" type="server:sapRequirementType" substitutionGroup="rd:abstractRequirement">
+		<xs:annotation>
+			<xs:documentation>Requirement for SAP</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="serverRequirementType">
+		<xs:complexContent>
+			<xs:extension base="rd:abstractRequirementType">
+				<xs:choice>
+					<xs:element name="karaf" type="server:apache-karaf" />
+					<xs:element name="servicemix" type="server:apache-servicemix" />
+					<xs:element name="fabric8" type="server:apache-fabric8" />
+					<xs:element name="fuse" type="server:jboss-fuse" />
+					<xs:element name="as" type="server:jboss-as" />
+					<xs:element name="eap" type="server:jboss-eap" />
+					<xs:element name="wildfly" type="server:jboss-wildfly" />
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="runtimeRequirementType">
+		<xs:complexContent>
+			<xs:extension base="rd:abstractRequirementType">
+				<xs:choice>
+					<xs:element name="esb" type="server:jboss-esb" />
+					<xs:element name="jbpm" type="server:jboss-jbpm" />
+					<xs:element name="brms" type="server:jboss-brms" />
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="switchyardRequirementType">
+		<xs:complexContent>
+			<xs:extension base="rd:abstractRequirementType">
+				<xs:sequence>
+					<xs:element name="configurationVersion">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="1.0" />
+								<xs:enumeration value="1.1" />
+								<xs:enumeration value="2.0" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="targetRuntime" type="xs:string" minOccurs="0" />
+					<xs:element name="libraryVersion" type="xs:string" />
+					<xs:choice minOccurs="0">
+						<xs:element name="karaf" type="server:apache-karaf" />
+						<xs:element name="servicemix" type="server:apache-servicemix" />
+						<xs:element name="fabric8" type="server:apache-fabric8" />
+						<xs:element name="fuse" type="server:jboss-fuse" />
+						<xs:element name="as" type="server:jboss-as" />
+						<xs:element name="eap" type="server:jboss-eap" />
+						<xs:element name="wildfly" type="server:jboss-wildfly" />
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- SAP -->
+	<xs:complexType name="sapRequirementType">
+		<xs:complexContent>
+			<xs:extension base="rd:abstractRequirementType">
+				<xs:sequence>
+					<xs:element name="lib" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="jco3" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="jidoc" type="xs:string" minOccurs="1" maxOccurs="1" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="destination" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ashost" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="sysnr" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="client" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="passwd" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="password" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="user" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="userName" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="lang" type="xs:string" minOccurs="1" maxOccurs="1" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="server" minOccurs="1" maxOccurs="1">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="gwhost" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="gwport" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="progid" type="xs:string" minOccurs="1" maxOccurs="1" />
+								<xs:element name="connectionCount" type="xs:string" minOccurs="1" maxOccurs="1" />
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- JBoss AS -->
+	<xs:complexType name="jboss-as">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="home" type="xs:string"/>
+				<xs:element name="remote" type="server:remoteType"/>
+			</xs:choice>
+			<xs:element name="configuration" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="jre" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="5.0" />
+					<xs:enumeration value="5.1" />
+					<xs:enumeration value="6.x" />
+					<xs:enumeration value="7.0" />
+					<xs:enumeration value="7.1" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- JBoss EAP -->
+	<xs:complexType name="jboss-eap">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="home" type="xs:string"/>
+				<xs:element name="remote" type="server:remoteType"/>
+			</xs:choice>
+			<xs:element name="configuration" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="jre" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="5.x" />
+					<xs:enumeration value="6.0" />
+					<xs:enumeration value="6.1+" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- JBoss WildFly -->
+	<xs:complexType name="jboss-wildfly">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="home" type="xs:string"/>
+				<xs:element name="remote" type="server:remoteType"/>
+			</xs:choice>
+			<xs:element name="jre" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="8.x" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- Apache Karaf -->
+	<xs:complexType name="apache-karaf">
+		<xs:sequence>
+			<xs:element name="home" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="jre" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="host" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="port" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="username" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="password" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="2.0" />
+					<xs:enumeration value="2.1" />
+					<xs:enumeration value="2.2" />
+					<xs:enumeration value="2.3" />
+					<xs:enumeration value="2.4" />
+					<xs:enumeration value="3.0" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- Apache ServiceMix -->
+	<xs:complexType name="apache-servicemix">
+		<xs:sequence>
+			<xs:element name="home" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="jre" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="host" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="port" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="username" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="password" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="4.5" />
+					<xs:enumeration value="5.0" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- Apache Fabric8 -->
+	<xs:complexType name="apache-fabric8">
+		<xs:sequence>
+			<xs:element name="home" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="jre" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="host" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="port" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="username" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="password" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1.1" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- JBoss Fuse -->
+	<xs:complexType name="jboss-fuse">
+		<xs:sequence>
+			<xs:element name="home" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="jre" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="host" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="port" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="username" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="password" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="6.0" />
+					<xs:enumeration value="6.1" />
+					<xs:enumeration value="6.2" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- JBoss ESB -->
+	<xs:complexType name="jboss-esb">
+		<xs:sequence>
+			<xs:element name="home" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="4.10" />
+					<xs:enumeration value="4.11" />
+					<xs:enumeration value="4.12" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- JBoss jBPM -->
+	<xs:complexType name="jboss-jbpm">
+		<xs:sequence>
+			<xs:element name="home" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="version" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="3.2" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- JBoss BRMS -->
+	<xs:complexType name="jboss-brms">
+		<xs:sequence>
+			<xs:element name="home" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="teiidRequirementType">
+		<xs:complexContent>
+			<xs:extension base="rd:abstractRequirementType">
+				<xs:sequence>
+					<xs:element name="eap" type="server:jboss-eap" />
+					<xs:element name="connection-profiles" type="server:connectionProfilesType"></xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="connectionProfilesType">
+		<xs:sequence>
+			<xs:element name="connection-profile" type="server:connectionProfileType" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="connectionProfileType">
+		<xs:sequence>
+			<xs:element name="hostname" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="vendor" type="xs:string"></xs:element>
+			<xs:element name="template" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="name" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="description" type="xs:string" maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="vendor_template" type="xs:string" maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="jdbc_path" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="password" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="version" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="jdbc_class" type="xs:string" maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="port" type="xs:string" maxOccurs="1" minOccurs="0">
+			</xs:element>
+			<xs:element name="username" type="xs:string"></xs:element>
+			<xs:element name="properties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+	
+	<!-- 	remote server definition -->
+	<xs:complexType name="remoteType">
+		<xs:sequence>
+			<xs:element name="host" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="remoteHome" minOccurs="0" maxOccurs="1" type="xs:string" />
+			<xs:element name="username" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="isExternallyManaged" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+			<xs:element name="useManagementOperations" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
