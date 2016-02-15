@@ -1,51 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://java.sun.com/xml/ns/j2ee" xmlns:j2ee="http://java.sun.com/xml/ns/j2ee" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.4">
+
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+	    targetNamespace="http://java.sun.com/xml/ns/j2ee"
+	    xmlns:j2ee="http://java.sun.com/xml/ns/j2ee"
+	    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    elementFormDefault="qualified"
+	    attributeFormDefault="unqualified"
+	    version="2.4">
   <xsd:annotation>
     <xsd:documentation>
-      @(#)web-app_2_4.xsds	1.61 04/04/16
+      @(#)web-app_2_4.xsds	1.60 03/08/26
     </xsd:documentation>
   </xsd:annotation>
 
   <xsd:annotation>
     <xsd:documentation>
 
-      DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+      Copyright 2004 Sun Microsystems, Inc., 901 San Antonio
+      Road, Palo Alto, California 94303, U.S.A. All rights
+      reserved.
 
-      Copyright 2003-2007 Sun Microsystems, Inc. All rights reserved.
+      Sun Microsystems, Inc. has intellectual property rights
+      relating to technology described in this document. In
+      particular, and without limitation, these intellectual
+      property rights may include one or more of the U.S. patents
+      listed at http://www.sun.com/patents and one or more
+      additional patents or pending patent applications in the
+      U.S. and other countries.
 
-      The contents of this file are subject to the terms of either the
-      GNU General Public License Version 2 only ("GPL") or the Common
-      Development and Distribution License("CDDL") (collectively, the
-      "License").  You may not use this file except in compliance with
-      the License. You can obtain a copy of the License at
-      https://glassfish.dev.java.net/public/CDDL+GPL.html or
-      glassfish/bootstrap/legal/LICENSE.txt.  See the License for the
-      specific language governing permissions and limitations under the
-      License.
+      This document and the technology which it describes are
+      distributed under licenses restricting their use, copying,
+      distribution, and decompilation. No part of this document
+      may be reproduced in any form by any means without prior
+      written authorization of Sun and its licensors, if any.
 
-      When distributing the software, include this License Header
-      Notice in each file and include the License file at
-      glassfish/bootstrap/legal/LICENSE.txt.  Sun designates this
-      particular file as subject to the "Classpath" exception as
-      provided by Sun in the GPL Version 2 section of the License file
-      that accompanied this code.  If applicable, add the following
-      below the License Header, with the fields enclosed by brackets []
-      replaced by your own identifying information:
-      "Portions Copyrighted [year] [name of copyright owner]"
+      Third-party software, including font technology, is
+      copyrighted and licensed from Sun suppliers.
 
-      Contributor(s):
+      Sun, Sun Microsystems, the Sun logo, Solaris, Java, J2EE,
+      JavaServer Pages, Enterprise JavaBeans and the Java Coffee
+      Cup logo are trademarks or registered trademarks of Sun
+      Microsystems, Inc. in the U.S. and other countries.
 
-      If you wish your version of this file to be governed by only the
-      CDDL or only the GPL Version 2, indicate your decision by adding
-      "[Contributor] elects to include this software in this
-      distribution under the [CDDL or GPL Version 2] license."  If you
-      don't indicate a single choice of license, a recipient has the
-      option to distribute your version of this file under either the
-      CDDL, the GPL Version 2 or to extend the choice of license to its
-      licensees as provided above.  However, if you add GPL Version 2
-      code and therefore, elected the GPL Version 2 license, then the
-      option applies only if the new code is made subject to such
-      option by the copyright holder.
+      Federal Acquisitions: Commercial Software - Government Users
+      Subject to Standard License Terms and Conditions.
 
     </xsd:documentation>
   </xsd:annotation>
@@ -139,7 +137,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:servlet"/>
-      <xsd:field xpath="j2ee:servlet-name"/>
+      <xsd:field    xpath="j2ee:servlet-name"/>
     </xsd:unique>
 
     <xsd:unique name="web-app-filter-name-uniqueness">
@@ -152,7 +150,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:filter"/>
-      <xsd:field xpath="j2ee:filter-name"/>
+      <xsd:field    xpath="j2ee:filter-name"/>
     </xsd:unique>
 
     <xsd:unique name="web-app-ejb-local-ref-name-uniqueness">
@@ -170,7 +168,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:ejb-local-ref"/>
-      <xsd:field xpath="j2ee:ejb-ref-name"/>
+      <xsd:field    xpath="j2ee:ejb-ref-name"/>
     </xsd:unique>
 
     <xsd:unique name="web-app-ejb-ref-name-uniqueness">
@@ -188,7 +186,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:ejb-ref"/>
-      <xsd:field xpath="j2ee:ejb-ref-name"/>
+      <xsd:field    xpath="j2ee:ejb-ref-name"/>
     </xsd:unique>
 
     <xsd:unique name="web-app-resource-env-ref-uniqueness">
@@ -204,7 +202,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:resource-env-ref"/>
-      <xsd:field xpath="j2ee:resource-env-ref-name"/>
+      <xsd:field    xpath="j2ee:resource-env-ref-name"/>
     </xsd:unique>
 
     <xsd:unique name="web-app-message-destination-ref-uniqueness">
@@ -220,7 +218,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:message-destination-ref"/>
-      <xsd:field xpath="j2ee:message-destination-ref-name"/>
+      <xsd:field    xpath="j2ee:message-destination-ref-name"/>
     </xsd:unique>
 
     <xsd:unique name="web-app-res-ref-name-uniqueness">
@@ -235,7 +233,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:resource-ref"/>
-      <xsd:field xpath="j2ee:res-ref-name"/>
+      <xsd:field    xpath="j2ee:res-ref-name"/>
     </xsd:unique>
 
     <xsd:unique name="web-app-env-entry-name-uniqueness">
@@ -251,7 +249,7 @@
       </xsd:annotation>
 
       <xsd:selector xpath="j2ee:env-entry"/>
-      <xsd:field xpath="j2ee:env-entry-name"/>
+      <xsd:field    xpath="j2ee:env-entry-name"/>
     </xsd:unique>
 
     <xsd:key name="web-app-role-name-key">
@@ -264,10 +262,11 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:security-role"/>
-      <xsd:field xpath="j2ee:role-name"/>
+      <xsd:field    xpath="j2ee:role-name"/>
     </xsd:key>
 
-    <xsd:keyref name="web-app-role-name-references" refer="j2ee:web-app-role-name-key">
+    <xsd:keyref name="web-app-role-name-references"
+		refer="j2ee:web-app-role-name-key">
       <xsd:annotation>
 	<xsd:documentation>
 
@@ -277,7 +276,7 @@
 	</xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="j2ee:servlet/j2ee:security-role-ref"/>
-      <xsd:field xpath="j2ee:role-link"/>
+      <xsd:field    xpath="j2ee:role-link"/>
     </xsd:keyref>
   </xsd:element>
 
@@ -305,8 +304,12 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="description" type="j2ee:descriptionType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="role-name" type="j2ee:role-nameType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="description"
+		   type="j2ee:descriptionType"
+		   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="role-name"
+		   type="j2ee:role-nameType"
+		   minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -419,9 +422,11 @@
 
     <xsd:sequence>
       <xsd:choice>
-	<xsd:element name="error-code" type="j2ee:error-codeType"/>
+	<xsd:element name="error-code"
+		     type="j2ee:error-codeType"/>
 
-	<xsd:element name="exception-type" type="j2ee:fully-qualified-classType">
+	<xsd:element name="exception-type"
+		     type="j2ee:fully-qualified-classType">
 	  <xsd:annotation>
 	    <xsd:documentation>
 
@@ -433,7 +438,8 @@
 	</xsd:element>
       </xsd:choice>
 
-      <xsd:element name="location" type="j2ee:war-pathType">
+      <xsd:element name="location"
+		   type="j2ee:war-pathType">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -475,12 +481,17 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="filter-name" type="j2ee:filter-nameType"/>
+      <xsd:element name="filter-name"
+		   type="j2ee:filter-nameType"/>
       <xsd:choice>
-	<xsd:element name="url-pattern" type="j2ee:url-patternType"/>
-	<xsd:element name="servlet-name" type="j2ee:servlet-nameType"/>
+	<xsd:element name="url-pattern"
+		     type="j2ee:url-patternType"/>
+	<xsd:element name="servlet-name"
+		     type="j2ee:servlet-nameType"/>
       </xsd:choice>
-      <xsd:element name="dispatcher" type="j2ee:dispatcherType" minOccurs="0" maxOccurs="4"/>
+      <xsd:element name="dispatcher"
+		   type="j2ee:dispatcherType"
+		   minOccurs="0" maxOccurs="4"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -526,8 +537,10 @@
 
     <xsd:sequence>
       <xsd:group ref="j2ee:descriptionGroup"/>
-      <xsd:element name="filter-name" type="j2ee:filter-nameType"/>
-      <xsd:element name="filter-class" type="j2ee:fully-qualified-classType">
+      <xsd:element name="filter-name"
+		   type="j2ee:filter-nameType"/>
+      <xsd:element name="filter-class"
+		   type="j2ee:fully-qualified-classType">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -537,7 +550,9 @@
 	</xsd:annotation>
       </xsd:element>
 
-      <xsd:element name="init-param" type="j2ee:param-valueType" minOccurs="0" maxOccurs="unbounded">
+      <xsd:element name="init-param"
+		   type="j2ee:param-valueType"
+		   minOccurs="0" maxOccurs="unbounded">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -568,7 +583,8 @@
 
     <xsd:sequence>
 
-      <xsd:element name="form-login-page" type="j2ee:war-pathType">
+      <xsd:element name="form-login-page"
+		   type="j2ee:war-pathType">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -581,7 +597,8 @@
 	</xsd:annotation>
       </xsd:element>
 
-      <xsd:element name="form-error-page" type="j2ee:war-pathType">
+      <xsd:element name="form-error-page"
+		   type="j2ee:war-pathType">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -638,7 +655,9 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="locale-encoding-mapping" type="j2ee:locale-encoding-mappingType" maxOccurs="unbounded"/>
+      <xsd:element name="locale-encoding-mapping"
+		   type="j2ee:locale-encoding-mappingType"
+		   maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -658,8 +677,10 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="locale" type="j2ee:localeType"/>
-      <xsd:element name="encoding" type="j2ee:encodingType"/>
+      <xsd:element name="locale"
+		   type="j2ee:localeType"/>
+      <xsd:element name="encoding"
+		   type="j2ee:encodingType"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -698,8 +719,11 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="auth-method" type="j2ee:auth-methodType" minOccurs="0"/>
-      <xsd:element name="realm-name" type="j2ee:string" minOccurs="0">
+      <xsd:element name="auth-method"
+		   type="j2ee:auth-methodType"
+		   minOccurs="0"/>
+      <xsd:element name="realm-name"
+		   type="j2ee:string" minOccurs="0">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -709,7 +733,9 @@
 	  </xsd:documentation>
 	</xsd:annotation>
       </xsd:element>
-      <xsd:element name="form-login-config" type="j2ee:form-login-configType" minOccurs="0"/>
+      <xsd:element name="form-login-config"
+		   type="j2ee:form-login-configType"
+		   minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -738,8 +764,10 @@
 	</xsd:documentation>
       </xsd:annotation>
 
-      <xsd:element name="extension" type="j2ee:string"/>
-      <xsd:element name="mime-type" type="j2ee:mime-typeType"/>
+      <xsd:element name="extension"
+		   type="j2ee:string"/>
+      <xsd:element name="mime-type"
+		   type="j2ee:mime-typeType"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -762,7 +790,7 @@
 
     <xsd:simpleContent>
       <xsd:restriction base="j2ee:string">
-	<xsd:pattern value="[^\p{Cc}^\s]+/[^\p{Cc}^\s]+"/>
+        <xsd:pattern value="[^\p{Cc}^\s]+/[^\p{Cc}^\s]+"/>
       </xsd:restriction>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -799,10 +827,19 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="display-name" type="j2ee:display-nameType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="web-resource-collection" type="j2ee:web-resource-collectionType" maxOccurs="unbounded"/>
-      <xsd:element name="auth-constraint" type="j2ee:auth-constraintType" minOccurs="0"/>
-      <xsd:element name="user-data-constraint" type="j2ee:user-data-constraintType" minOccurs="0"/>
+      <xsd:element name="display-name"
+		   type="j2ee:display-nameType"
+		   minOccurs="0"
+		   maxOccurs="unbounded"/>
+      <xsd:element name="web-resource-collection"
+		   type="j2ee:web-resource-collectionType"
+		   maxOccurs="unbounded"/>
+      <xsd:element name="auth-constraint"
+		   type="j2ee:auth-constraintType"
+		   minOccurs="0"/>
+      <xsd:element name="user-data-constraint"
+		   type="j2ee:user-data-constraintType"
+		   minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -822,8 +859,10 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="servlet-name" type="j2ee:servlet-nameType"/>
-      <xsd:element name="url-pattern" type="j2ee:url-patternType"/>
+      <xsd:element name="servlet-name"
+		   type="j2ee:servlet-nameType"/>
+      <xsd:element name="url-pattern"
+		   type="j2ee:url-patternType"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -865,9 +904,11 @@
 
     <xsd:sequence>
       <xsd:group ref="j2ee:descriptionGroup"/>
-      <xsd:element name="servlet-name" type="j2ee:servlet-nameType"/>
+      <xsd:element name="servlet-name"
+		   type="j2ee:servlet-nameType"/>
       <xsd:choice>
-	<xsd:element name="servlet-class" type="j2ee:fully-qualified-classType">
+	<xsd:element name="servlet-class"
+		     type="j2ee:fully-qualified-classType">
 	  <xsd:annotation>
 	    <xsd:documentation>
 
@@ -878,12 +919,17 @@
 	  </xsd:annotation>
 	</xsd:element>
 
-	<xsd:element name="jsp-file" type="j2ee:jsp-fileType"/>
+	<xsd:element name="jsp-file"
+		     type="j2ee:jsp-fileType"/>
 
       </xsd:choice>
 
-      <xsd:element name="init-param" type="j2ee:param-valueType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="load-on-startup" type="j2ee:xsdIntegerType" minOccurs="0">
+      <xsd:element name="init-param"
+		   type="j2ee:param-valueType"
+		   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="load-on-startup"
+		   type="j2ee:xsdIntegerType"
+		   minOccurs="0">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -907,8 +953,12 @@
 	  </xsd:documentation>
 	</xsd:annotation>
       </xsd:element>
-      <xsd:element name="run-as" type="j2ee:run-asType" minOccurs="0"/>
-      <xsd:element name="security-role-ref" type="j2ee:security-role-refType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="run-as"
+		   type="j2ee:run-asType"
+		   minOccurs="0"/>
+      <xsd:element name="security-role-ref"
+		   type="j2ee:security-role-refType"
+		   minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -928,7 +978,9 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="session-timeout" type="j2ee:xsdIntegerType" minOccurs="0">
+      <xsd:element name="session-timeout"
+		   type="j2ee:xsdIntegerType"
+		   minOccurs="0">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -997,8 +1049,12 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="description" type="j2ee:descriptionType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="transport-guarantee" type="j2ee:transport-guaranteeType"/>
+      <xsd:element name="description"
+		   type="j2ee:descriptionType"
+		   minOccurs="0"
+		   maxOccurs="unbounded"/>
+      <xsd:element name="transport-guarantee"
+		   type="j2ee:transport-guaranteeType"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -1045,8 +1101,10 @@
 
     <xsd:choice minOccurs="0" maxOccurs="unbounded">
       <xsd:group ref="j2ee:descriptionGroup"/>
-      <xsd:element name="distributable" type="j2ee:emptyType"/>
-      <xsd:element name="context-param" type="j2ee:param-valueType">
+      <xsd:element name="distributable"
+		   type="j2ee:emptyType"/>
+      <xsd:element name="context-param"
+		   type="j2ee:param-valueType">
 
 	<xsd:annotation>
 	  <xsd:documentation>
@@ -1059,25 +1117,42 @@
 	</xsd:annotation>
       </xsd:element>
 
-      <xsd:element name="filter" type="j2ee:filterType"/>
-      <xsd:element name="filter-mapping" type="j2ee:filter-mappingType"/>
-      <xsd:element name="listener" type="j2ee:listenerType"/>
-      <xsd:element name="servlet" type="j2ee:servletType"/>
-      <xsd:element name="servlet-mapping" type="j2ee:servlet-mappingType"/>
-      <xsd:element name="session-config" type="j2ee:session-configType"/>
-      <xsd:element name="mime-mapping" type="j2ee:mime-mappingType"/>
-      <xsd:element name="welcome-file-list" type="j2ee:welcome-file-listType"/>
-      <xsd:element name="error-page" type="j2ee:error-pageType"/>
-      <xsd:element name="jsp-config" type="j2ee:jsp-configType"/>
-      <xsd:element name="security-constraint" type="j2ee:security-constraintType"/>
-      <xsd:element name="login-config" type="j2ee:login-configType"/>
-      <xsd:element name="security-role" type="j2ee:security-roleType"/>
+      <xsd:element name="filter"
+		   type="j2ee:filterType"/>
+      <xsd:element name="filter-mapping"
+		   type="j2ee:filter-mappingType"/>
+      <xsd:element name="listener"
+		   type="j2ee:listenerType"/>
+      <xsd:element name="servlet"
+		   type="j2ee:servletType"/>
+      <xsd:element name="servlet-mapping"
+		   type="j2ee:servlet-mappingType"/>
+      <xsd:element name="session-config"
+		   type="j2ee:session-configType"/>
+      <xsd:element name="mime-mapping"
+		   type="j2ee:mime-mappingType"/>
+      <xsd:element name="welcome-file-list"
+		   type="j2ee:welcome-file-listType"/>
+      <xsd:element name="error-page"
+		   type="j2ee:error-pageType"/>
+      <xsd:element name="jsp-config"
+		   type="j2ee:jsp-configType"/>
+      <xsd:element name="security-constraint"
+		   type="j2ee:security-constraintType"/>
+      <xsd:element name="login-config"
+		   type="j2ee:login-configType"/>
+      <xsd:element name="security-role"
+		   type="j2ee:security-roleType"/>
       <xsd:group ref="j2ee:jndiEnvironmentRefsGroup"/>
-      <xsd:element name="message-destination" type="j2ee:message-destinationType"/>
-      <xsd:element name="locale-encoding-mapping-list" type="j2ee:locale-encoding-mapping-listType"/>
+      <xsd:element name="message-destination"
+		   type="j2ee:message-destinationType"/>
+      <xsd:element name="locale-encoding-mapping-list"
+		   type="j2ee:locale-encoding-mapping-listType"/>
     </xsd:choice>
 
-    <xsd:attribute name="version" type="j2ee:web-app-versionType" use="required"/>
+    <xsd:attribute name="version"
+		   type="j2ee:web-app-versionType"
+		   use="required"/>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
 
@@ -1099,7 +1174,8 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="web-resource-name" type="j2ee:string">
+      <xsd:element name="web-resource-name"
+		   type="j2ee:string">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -1109,9 +1185,16 @@
 	  </xsd:documentation>
 	</xsd:annotation>
       </xsd:element>
-      <xsd:element name="description" type="j2ee:descriptionType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="url-pattern" type="j2ee:url-patternType" maxOccurs="unbounded"/>
-      <xsd:element name="http-method" type="j2ee:http-methodType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="description"
+		   type="j2ee:descriptionType"
+		   minOccurs="0"
+		   maxOccurs="unbounded"/>
+      <xsd:element name="url-pattern"
+		   type="j2ee:url-patternType"
+		   maxOccurs="unbounded"/>
+      <xsd:element name="http-method"
+		   type="j2ee:http-methodType"
+		   minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:ID"/>
   </xsd:complexType>
@@ -1131,7 +1214,9 @@
     </xsd:annotation>
 
     <xsd:sequence>
-      <xsd:element name="welcome-file" type="xsd:string" maxOccurs="unbounded">
+      <xsd:element name="welcome-file"
+		   type="xsd:string"
+		   maxOccurs="unbounded">
 	<xsd:annotation>
 	  <xsd:documentation>
 
@@ -1146,3 +1231,4 @@
   </xsd:complexType>
 
 </xsd:schema>
+

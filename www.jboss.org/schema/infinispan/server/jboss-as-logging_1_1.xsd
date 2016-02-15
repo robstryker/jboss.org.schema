@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!--
   ~ JBoss, Home of Professional Open Source.
   ~ Copyright 2011, Red Hat, Inc., and individual contributors
@@ -47,7 +49,6 @@
             <xs:element name="size-rotating-file-handler" type="sizeFileHandlerType"/>
             <xs:element name="async-handler" type="asyncHandlerType"/>
             <xs:element name="custom-handler" type="customHandlerType" />
-            <xs:any namespace="##other"/>
         </xs:choice>
     </xs:complexType>
 
@@ -125,7 +126,6 @@
             <xs:element name="encoding" type="valueType" minOccurs="0"/>
             <xs:element name="filter" type="filterType" minOccurs="0"/>
             <xs:element name="formatter" type="formatterType" minOccurs="0"/>
-            <xs:element name="properties" type="propertiesType" minOccurs="0"/>
             <xs:element name="target" minOccurs="0">
                 <xs:complexType>
                     <xs:attribute name="name" use="required">
@@ -154,7 +154,6 @@
             <xs:element name="encoding" type="valueType" minOccurs="0"/>
             <xs:element name="filter" type="filterType" minOccurs="0"/>
             <xs:element name="formatter" type="formatterType" minOccurs="0"/>
-            <xs:element name="properties" type="propertiesType" minOccurs="0"/>
             <xs:element name="file" type="pathType" minOccurs="1"/>
             <xs:element name="append" type="booleanValueType" minOccurs="0"/>
         </xs:all>
@@ -174,7 +173,6 @@
             <xs:element name="encoding" type="valueType" minOccurs="0"/>
             <xs:element name="filter" type="filterType" minOccurs="0"/>
             <xs:element name="formatter" type="formatterType" minOccurs="0"/>
-            <xs:element name="properties" type="propertiesType" minOccurs="0"/>
             <xs:element name="file" type="pathType"/>
             <xs:element name="suffix" type="valueType"/>
             <xs:element name="append" type="booleanValueType" minOccurs="0"/>
@@ -186,7 +184,7 @@
         <xs:complexType name="sizeFileHandlerType">
         <xs:annotation>
             <xs:documentation>
-                Defines a handler which writes to a file, rotating the log after a the size of the file grows beyond a
+                Defines a handler which writes to a file, rotating the log after the size of the file grows beyond a
                 certain point and keeping a fixed number of backups.
             </xs:documentation>
         </xs:annotation>
@@ -195,7 +193,6 @@
             <xs:element name="encoding" type="valueType" minOccurs="0"/>
             <xs:element name="filter" type="filterType" minOccurs="0"/>
             <xs:element name="formatter" type="formatterType" minOccurs="0"/>
-            <xs:element name="properties" type="propertiesType" minOccurs="0"/>
             <xs:element name="file" type="pathType"/>
             <xs:element name="rotate-size" type="sizeType" minOccurs="0"/>
             <xs:element name="max-backup-index" type="positiveIntType" minOccurs="0"/>
@@ -215,7 +212,6 @@
         <xs:all>
             <xs:element name="level" type="refType" minOccurs="0"/>
             <xs:element name="filter" type="filterType" minOccurs="0"/>
-            <xs:element name="properties" type="propertiesType" minOccurs="0"/>
             <xs:element name="queue-length" type="queueLengthType" minOccurs="1" maxOccurs="1"/>
             <xs:element name="overflow-action" type="overflowActionType" minOccurs="0"/>
             <xs:element name="subhandlers" type="handlersType"/>
@@ -283,7 +279,8 @@
         <xs:attribute name="value">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:pattern value="^[0-9]+[bkmgtp]?$"/>
+                    <!-- XSD doesn't allow ^ or $ so ^[0-9]+[bkmgtp]?$ is invalid -->
+                    <xs:pattern value="[0-9]+[bkmgtp]"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
@@ -388,7 +385,6 @@
         </xs:annotation>
         <xs:choice minOccurs="1" maxOccurs="1">
             <xs:element name="pattern-formatter" type="patternFormatterType" maxOccurs="1"/>
-            <xs:any namespace="##other"/>
         </xs:choice>
     </xs:complexType>
 
