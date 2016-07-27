@@ -22,10 +22,14 @@ to parse xml files targeting the new updated schema.
 
 ## Jenkins Job
 
-There are currently two separate jobs proposed. The first will handle PRs, validate that 
-the repository is in sync with the expected state of the server, and otherwise assist 
-in making sure the PR is usable. 
+There are currently 3 jenkins jobs:
 
-The second will handle the merging of the data to upstream jboss.org/schema server. 
+1) jboss.org.schema-production  -  rsync down from web server and check for changes. If it finds some, it commits to production branch
+
+2) jboss.org.schema-Pull-Request - Will check out the PR branch, make sure 'production' is up to date (or fail if not), and verify the PR *can* be merged
+
+3) jboss.org.schema-productionToWeb - responds to changes in 'production' branch and attempts to rsync these changes up to the web server
+
+Before merging any PR, it is important to first make sure jboss.org.schema-production runs in case someone else has updated the remote web server in the interim since the PR was approved.  Once jboss.org.schema-production runs successfully, you can merge in the PR.  The jboss.org.schema-productionToWeb will respond to the change and rsync back up to web server
 
 
