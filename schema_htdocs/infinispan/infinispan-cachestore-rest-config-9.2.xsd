@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" version="1.0"
-           targetNamespace="urn:infinispan:config:store:rest:9.0"
-           xmlns:tns="urn:infinispan:config:store:rest:9.0"
-           xmlns:config="urn:infinispan:config:9.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import namespace="urn:infinispan:config:9.0"
-             schemaLocation="http://www.infinispan.org/schemas/infinispan-config-9.0.xsd" />
+           targetNamespace="urn:infinispan:config:store:rest:9.2"
+           xmlns:tns="urn:infinispan:config:store:rest:9.2"
+           xmlns:config="urn:infinispan:config:9.2" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="urn:infinispan:config:9.2"
+             schemaLocation="http://www.infinispan.org/schemas/infinispan-config-9.2.xsd" />
 
   <xs:element name="rest-store" type="tns:rest-store"/>
 
@@ -40,6 +40,11 @@
             <xs:documentation>
               Whether to disable unmarshalling of values.
             </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="max-content-length" type="xs:int" default="10485760">
+          <xs:annotation>
+            <xs:documentation>The maximum allowed content length of a POST/PUT request.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
