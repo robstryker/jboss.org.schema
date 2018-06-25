@@ -541,7 +541,7 @@
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="duplicate-domains" type="xs:boolean" default="false">
+    <xs:attribute name="duplicate-domains" type="xs:boolean" default="true">
       <xs:annotation>
         <xs:documentation>
           If true, multiple cache manager instances could be configured under the same configured JMX domain. Each cache manager will in practice use a different JMX domain that has been calculated based on the configured one by adding an incrementing index to it.
@@ -552,17 +552,28 @@
 
   <xs:complexType name="global-state">
     <xs:sequence>
-      <xs:element name="persistent-location" type="tns:global-state-path" minOccurs="1" maxOccurs="1">
+      <xs:element name="persistent-location" type="tns:global-state-path" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             Defines the filesystem path where persistent state data which needs to survive container restarts
             should be stored. The data stored at this location is required for graceful
-            shutdown and restore. Defaults to the user.dir system property which usually is where the
+            shutdown and restore. This path must NOT be shared among multiple instances.
+            Defaults to the user.dir system property which usually is where the
             application was started. This value should be overridden to a more appropriate location.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="temporary-location" type="tns:global-state-path" minOccurs="0" maxOccurs="1">
+      <xs:element name="shared-persistent-location" type="tns:global-state-path" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Defines the filesystem path where shared persistent state data which needs to survive container restarts
+            should be stored. This path can be safely shared among multiple instances.
+            Defaults to the user.dir system property which usually is where the
+            application was started. This value should be overridden to a more appropriate location.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="temporary-location" type="tns:global-state-path" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             Defines the filesystem path where temporary state should be stored. Defaults to the value of the
@@ -570,6 +581,52 @@
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:choice minOccurs="0">
+        <xs:element name="immutable-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              An immutable configuration storage.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="volatile-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              A non-persistent configuration storage.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="overlay-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              A persistent configuration storage which saves runtime configurations to the persistent-location.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="managed-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              A persistent configuration storage for managed environments. This doesn't work in embedded mode.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="custom-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              Uses a custom configuration storage implementation.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="class" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  Class of the custom configuration storage implementation.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
 
@@ -617,6 +674,11 @@
             </xs:annotation>
           </xs:attribute>
         </xs:complexType>
+      </xs:element>
+      <xs:element name="encoding" type="tns:encoding" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The cache encoding configuration.</xs:documentation>
+        </xs:annotation>
       </xs:element>
       <xs:element name="locking" type="tns:locking" minOccurs="0">
         <xs:annotation>
@@ -882,6 +944,39 @@
     </xs:attribute>
   </xs:complexType>
 
+  <xs:complexType name="encodingType" abstract="true">
+    <xs:annotation>
+      <xs:documentation>
+        Describes the content-type and encoding.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="media-type" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="keyEncodingType">
+    <xs:complexContent>
+      <xs:extension base="tns:encodingType"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="valueEncodingType">
+    <xs:complexContent>
+      <xs:extension base="tns:encodingType"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="encoding">
+    <xs:annotation>
+      <xs:documentation>
+        Defines content type and encoding for keys and values of the cache.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="key" type="tns:keyEncodingType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="value" type="tns:valueEncodingType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="eviction">
     <xs:annotation>
       <xs:documentation>
@@ -1134,6 +1229,12 @@
         entries in the cache.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="strategy" type="tns:eviction-strategy">
+      <xs:annotation>
+        <xs:documentation>The eviction strategy to use. This determines if eviction is even enabled or if it
+          has a different variant.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="memory-binary">
@@ -1150,6 +1251,12 @@
         the number of entries.  MEMORY will limit the cache by how much memory the entries use</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="strategy" type="tns:eviction-strategy">
+      <xs:annotation>
+        <xs:documentation>The eviction strategy to use. This determines if eviction is even enabled or if it
+        has a different variant.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="memory-off-heap">
@@ -1164,6 +1271,12 @@
       <xs:annotation>
         <xs:documentation>The eviction type to use whether it is COUNT or MEMORY.  COUNT will limit the cache based on
           the number of entries.  MEMORY will limit the cache by how much memory the entries use</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="strategy" type="tns:eviction-strategy">
+      <xs:annotation>
+        <xs:documentation>The eviction strategy to use. This determines if eviction is even enabled or if it
+          has a different variant.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="address-count" type="xs:int" default="1048576">
@@ -1200,7 +1313,7 @@
                    <xs:documentation>The type of actions that are possible when a split brain scenario is encountered.</xs:documentation>
                  </xs:annotation>
                </xs:attribute>
-               <xs:attribute name="merge-policy" type="tns:merge-policy" default="NONE">
+               <xs:attribute name="merge-policy" type="tns:merge-policy" default="PREFERRED_ALWAYS">
                  <xs:annotation>
                    <xs:documentation>The entry merge policy which should be applied on partition merges.</xs:documentation>
                  </xs:annotation>
@@ -1851,29 +1964,42 @@
           <xs:documentation>Never evict entries. This is the default.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
+      <xs:enumeration value="MANUAL">
+        <xs:annotation>
+          <xs:documentation>Eviction will be performed manually. Equivalent internally to NONE.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="REMOVE">
+        <xs:annotation>
+          <xs:documentation>Eviction will be performed automatically to ensure that "older" entries are removed to make room
+            for new entries.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EXCEPTION">
+        <xs:annotation>
+          <xs:documentation>Eviction is not performed and instead when the container is full exceptions will prevent
+            new entries from being written to the container. This cache must be transactional and now allow for
+            commit optimizations that would prevent it from performing a two phase commit.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
       <xs:enumeration value="UNORDERED">
         <xs:annotation>
-          <xs:documentation>Actually activates LRU.</xs:documentation>
+          <xs:documentation>Deprecated. Activates REMOVE policy.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="FIFO">
         <xs:annotation>
-          <xs:documentation>Deprecated. Actually activates LRU.</xs:documentation>
+          <xs:documentation>Deprecated. Activates REMOVE policy.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="LRU">
         <xs:annotation>
-          <xs:documentation>Least-Recently Used policy.</xs:documentation>
+          <xs:documentation>Deprecated. Activates REMOVE policy.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="LIRS">
         <xs:annotation>
-          <xs:documentation>Low Inter-reference Recency Set. An improved version of LRU which uses cache-locality access information to better decide which data to evict.</xs:documentation>
-        </xs:annotation>
-      </xs:enumeration>
-      <xs:enumeration value="MANUAL">
-        <xs:annotation>
-          <xs:documentation>Eviction will be performed manually. Equivalent internally to NONE.</xs:documentation>
+          <xs:documentation>Deprecated. Activates REMOVE policy.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>

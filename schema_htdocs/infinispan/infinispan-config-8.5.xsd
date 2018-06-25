@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
-           version="1.0" targetNamespace="urn:infinispan:config:9.1"
-           xmlns:tns="urn:infinispan:config:9.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+           version="1.0" targetNamespace="urn:infinispan:config:8.5"
+           xmlns:tns="urn:infinispan:config:8.5" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:element name="infinispan" type="tns:infinispan">
     <xs:annotation>
@@ -237,16 +237,6 @@
             <xs:documentation>Defines a DIST_* mode cache configuration.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element name="scattered-cache" type="tns:scattered-cache">
-          <xs:annotation>
-            <xs:documentation>Defines a SCATTERED_* mode cache. Since 9.0.</xs:documentation>
-          </xs:annotation>
-        </xs:element>
-        <xs:element name="scattered-cache-configuration" type="tns:scattered-cache">
-          <xs:annotation>
-            <xs:documentation>Defines a SCATTERED_* mode cache configuration. Since 9.0.</xs:documentation>
-          </xs:annotation>
-        </xs:element>
         <xs:any namespace="##other"/>
       </xs:choice>
     </xs:sequence>
@@ -332,6 +322,11 @@
     <xs:attribute name="executor" type="xs:string" >
       <xs:annotation>
         <xs:documentation>Defines the executor used for asynchronous transport communication.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="total-order-executor" type="xs:string" >
+      <xs:annotation>
+        <xs:documentation>Configuration for the total order executor service used to concurrent validate non conflicting transactions.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="remote-command-executor" type="xs:string" >
@@ -503,7 +498,7 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
-    <xs:attribute name="marshaller" type="xs:string">
+    <xs:attribute name="marshaller" type="xs:string" default="org.infinispan.marshall.core.VersionAwareMarshaller">
       <xs:annotation>
         <xs:documentation>
           Fully qualified name of the marshaller to use. It must implement org.infinispan.marshall.StreamingMarshaller
@@ -552,17 +547,28 @@
 
   <xs:complexType name="global-state">
     <xs:sequence>
-      <xs:element name="persistent-location" type="tns:global-state-path" minOccurs="1" maxOccurs="1">
+      <xs:element name="persistent-location" type="tns:global-state-path" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             Defines the filesystem path where persistent state data which needs to survive container restarts
             should be stored. The data stored at this location is required for graceful
-            shutdown and restore. Defaults to the user.dir system property which usually is where the
+            shutdown and restore. This path must NOT be shared among multiple instances.
+            Defaults to the user.dir system property which usually is where the
             application was started. This value should be overridden to a more appropriate location.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element name="temporary-location" type="tns:global-state-path" minOccurs="0" maxOccurs="1">
+      <xs:element name="shared-persistent-location" type="tns:global-state-path" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Defines the filesystem path where shared persistent state data which needs to survive container restarts
+            should be stored. This path can be safely shared among multiple instances.
+            Defaults to the user.dir system property which usually is where the
+            application was started. This value should be overridden to a more appropriate location.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="temporary-location" type="tns:global-state-path" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             Defines the filesystem path where temporary state should be stored. Defaults to the value of the
@@ -570,6 +576,52 @@
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:choice minOccurs="0">
+        <xs:element name="immutable-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              An immutable configuration storage.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="volatile-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              A non-persistent configuration storage.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="overlay-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              A persistent configuration storage which saves runtime configurations to the persistent-location.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="managed-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              A persistent configuration storage for managed environments. This doesn't work in embedded mode.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="custom-configuration-storage">
+          <xs:annotation>
+            <xs:documentation>
+              Uses a custom configuration storage implementation.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="class" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  Class of the custom configuration storage implementation.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
 
@@ -617,6 +669,11 @@
             </xs:annotation>
           </xs:attribute>
         </xs:complexType>
+      </xs:element>
+      <xs:element name="encoding" type="tns:encoding" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The cache encoding configuration.</xs:documentation>
+        </xs:annotation>
       </xs:element>
       <xs:element name="locking" type="tns:locking" minOccurs="0">
         <xs:annotation>
@@ -673,6 +730,18 @@
             Controls how the entries are stored in memory
           </xs:documentation>
         </xs:annotation>
+      </xs:element>
+      <xs:element name="modules" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            This element contains configuration options for additional modules which affect cache configuration
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:any namespace="##other"/>
+          </xs:sequence>
+        </xs:complexType>
       </xs:element>
       <xs:element name="indexing" minOccurs="0">
         <xs:annotation>
@@ -745,7 +814,7 @@
     <xs:attribute name="module" type="xs:string">
       <xs:annotation><xs:documentation>Unused XML attribute</xs:documentation></xs:annotation>
     </xs:attribute>
-    <xs:attribute name="statistics" type="xs:boolean" default="false">
+    <xs:attribute name="statistics" type="xs:boolean" default="true">
       <xs:annotation>
         <xs:documentation>Determines whether or not the cache should collect statistics.  Keep disabled for optimal performance.</xs:documentation>
       </xs:annotation>
@@ -755,10 +824,10 @@
         <xs:documentation>If set to false, statistics gathering cannot be enabled during runtime. Keep disabled for optimal performance.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="deadlock-detection-spin" type="xs:long" default="-1">
+    <xs:attribute name="deadlock-detection-spin" type="xs:long" default="100">
       <xs:annotation>
         <xs:documentation>
-          Deprecated since 9.0, deadlock detection is always disabled.
+          Time period that determines how often is lock acquisition attempted within maximum time allowed to acquire a particular lock. Defaults to 100ms.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -786,7 +855,7 @@
   </xs:complexType>
 
   <xs:complexType name="locking">
-    <xs:attribute name="isolation" type="tns:isolation" default="REPEATABLE_READ">
+    <xs:attribute name="isolation" type="tns:isolation" default="READ_COMMITTED">
       <xs:annotation>
         <xs:documentation>Sets the cache locking isolation level. Infinispan only supports READ_COMMITTED or REPEATABLE_READ isolation level.</xs:documentation>
       </xs:annotation>
@@ -806,10 +875,10 @@
         <xs:documentation>Concurrency level for lock containers. Adjust this value according to the number of concurrent threads interacting with Infinispan.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="write-skew" type="xs:boolean" default="true">
+    <xs:attribute name="write-skew" type="xs:boolean" default="false">
       <xs:annotation>
         <xs:documentation>
-          (Deprecated) This setting is only applicable in the case of REPEATABLE_READ. When write skew check is set to false, if the writer at commit time discovers that the working entry and the underlying entry have different versions, the working entry will overwrite the underlying entry. If true, such version conflict - known as a write-skew - will throw an Exception. Defaults to false.
+          This setting is only applicable in the case of REPEATABLE_READ. When write skew check is set to false, if the writer at commit time discovers that the working entry and the underlying entry have different versions, the working entry will overwrite the underlying entry. If true, such version conflict - known as a write-skew - will throw an Exception. Defaults to false.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -831,7 +900,7 @@
         <xs:documentation>The locking mode for this cache, one of OPTIMISTIC or PESSIMISTIC.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="transaction-manager-lookup" type="xs:string" default="org.infinispan.transaction.lookup.GenericTransactionManagerLookup">
+    <xs:attribute name="transaction-manager-lookup" type="xs:string" default="org.infinispan.transaction.lookup.GenericTransactionManagerLookup.GenericTransactionManagerLookup">
       <xs:annotation>
         <xs:documentation>
           Configure Transaction manager lookup directly using an instance of TransactionManagerLookup. Calling this method marks the cache as transactional.
@@ -880,6 +949,39 @@
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="encodingType" abstract="true">
+    <xs:annotation>
+      <xs:documentation>
+        Describes the content-type and encoding.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="media-type" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="keyEncodingType">
+    <xs:complexContent>
+      <xs:extension base="tns:encodingType"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="valueEncodingType">
+    <xs:complexContent>
+      <xs:extension base="tns:encodingType"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="encoding">
+    <xs:annotation>
+      <xs:documentation>
+        Defines content type and encoding for keys and values of the cache.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="key" type="tns:keyEncodingType" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="value" type="tns:valueEncodingType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="eviction">
@@ -1030,7 +1132,7 @@
           </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-          <xs:attribute name="enabled" type="xs:boolean" default="false">
+          <xs:attribute name="enabled" type="xs:boolean" default="true">
             <xs:annotation>
               <xs:documentation>
                 Enables authorization checks for this cache. Defaults to true if the authorization element is present.
@@ -1050,10 +1152,10 @@
   </xs:complexType>
 
   <xs:complexType name="versioning">
-    <xs:attribute name="scheme" type="tns:versioning-scheme" default="SIMPLE">
+    <xs:attribute name="scheme" type="tns:versioning-scheme" default="NONE">
       <xs:annotation>
         <xs:documentation>
-          (Deprecated) The scheme to use when versioning entries. Can be either SIMPLE or NONE. Defaults to NONE
+          The scheme to use when versioning entries. Can be either SIMPLE or NONE. Defaults to NONE
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
@@ -1200,7 +1302,7 @@
                    <xs:documentation>The type of actions that are possible when a split brain scenario is encountered.</xs:documentation>
                  </xs:annotation>
                </xs:attribute>
-               <xs:attribute name="merge-policy" type="tns:merge-policy" default="org.infinispan.conflict.MergePolicies$$Lambda$65/456223916">
+               <xs:attribute name="merge-policy" type="tns:merge-policy" default="PREFERRED_ALWAYS">
                  <xs:annotation>
                    <xs:documentation>The entry merge policy which should be applied on partition merges.</xs:documentation>
                  </xs:annotation>
@@ -1296,12 +1398,12 @@
             <xs:documentation>Number of hash space segments (per cluster). The default value is 256, and should be at least 20 * cluster size.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="capacity-factor" type="xs:double" default="1.0">
+        <!--<xs:attribute name="capacity-factor" type="xs:double" default="1">
           <xs:annotation>
             <xs:documentation>Controls the proportion of entries that will reside on the local node,
               compared to the other nodes in the cluster. Value must be positive. The default is 1</xs:documentation>
           </xs:annotation>
-        </xs:attribute>
+        </xs:attribute>-->
         <xs:attribute name="l1-lifespan" type="xs:long">
           <xs:annotation>
             <xs:documentation>Maximum lifespan in milliseconds of an entry placed in the L1 cache.
@@ -1316,7 +1418,7 @@
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="capacity" type="xs:float" default="1.0">
+        <!--<xs:attribute name="capacity" type="xs:float" default="1">
           <xs:annotation>
             <xs:documentation>
               Controls the proportion of entries that will reside on the local node, compared to the other nodes
@@ -1324,7 +1426,7 @@
               factor of 2 will have twice as many entries as a node with a capacity factor of 1.
             </xs:documentation>
           </xs:annotation>
-        </xs:attribute>
+        </xs:attribute>-->
         <xs:attribute name="consistent-hash-factory" type="xs:string">
           <xs:annotation>
             <xs:documentation>
@@ -1344,70 +1446,6 @@
               A custom key partitioner can be used as an alternative to grouping, to guarantee that some keys
               are located in the same segment (and thus their primary owner is the same node).
               Since 8.2.
-            </xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="scattered-cache">
-    <xs:complexContent>
-      <xs:extension base="tns:clustered-cache">
-        <xs:sequence>
-          <xs:element name="state-transfer" type="tns:state-transfer" minOccurs="0">
-            <xs:annotation>
-              <xs:documentation>The state transfer configuration for distribution and replicated caches.</xs:documentation>
-            </xs:annotation>
-          </xs:element>
-          <xs:element name="groups" type="tns:groups" minOccurs="0">
-            <xs:annotation>
-              <xs:documentation>Configures grouping of data.</xs:documentation>
-            </xs:annotation>
-          </xs:element>
-        </xs:sequence>
-        <xs:attribute name="segments" type="xs:int" default="256">
-          <xs:annotation>
-            <xs:documentation>Number of hash space segments (per cluster). The default value is 256, and should be at least 20 * cluster size.</xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="capacity" type="xs:float" default="1">
-          <xs:annotation>
-            <xs:documentation>
-              Controls the proportion of entries that will reside on the local node, compared to the other nodes
-              in the cluster. This is just a suggestion, there is no guarantee that a node with a capacity
-              factor of 2 will have twice as many entries as a node with a capacity factor of 1.
-            </xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="consistent-hash-factory" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>
-              The factory to use for generating the consistent hash.
-              Must implement `org.infinispan.distribution.ch.ConsistentHashFactory`.
-              E.g. `org.infinispan.distribution.ch.impl.SyncConsistentHashFactory` can be used to guarantee
-              that multiple distributed caches use exactly the same consistent hash, which for performance
-              reasons is not guaranteed by the default consistent hash factory instance used.
-            </xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="key-partitioner" type="xs:string">
-          <xs:annotation>
-            <xs:documentation>
-              The name of the key partitioner class.
-              Must implement `org.infinispan.distribution.ch.KeyPartitioner`.
-              A custom key partitioner can be used as an alternative to grouping, to guarantee that some keys
-              are located in the same segment (and thus their primary owner is the same node).
-              Since 8.2.
-            </xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="invalidation-batch-size" type="xs:integer" default="128">
-          <xs:annotation>
-            <xs:documentation>
-              Threshold for sending batch invalidations. Once a node registers more updated keys,
-              it sends a batch invalidation to all nodes requesting to remove old versions of the entries.
-              The threshold is also used for second batch invalidation of tombstones for removed entries.
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
@@ -1478,19 +1516,19 @@
         <xs:documentation>If true, when the cache starts, data stored in the cache store will be pre-loaded into memory. This is particularly useful when data in the cache store will be needed immediately after startup and you want to avoid cache operations being delayed as a result of loading this data lazily. Can be used to provide a 'warm-cache' on startup, however there is a performance penalty as startup time is affected by this process.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="fetch-state" type="xs:boolean" default="false">
+    <xs:attribute name="fetch-state" type="xs:boolean" default="true">
       <xs:annotation>
         <xs:documentation>If true, fetch persistent state when joining a cluster. If multiple cache stores are chained, only one of them can have this property enabled.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="purge" type="xs:boolean" default="false">
+    <xs:attribute name="purge" type="xs:boolean" default="true">
       <xs:annotation>
         <xs:documentation>If true, purges this cache store when it starts up.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="singleton" type="xs:boolean" default="false">
       <xs:annotation>
-        <xs:documentation>If true, the singleton store cache store is enabled. SingletonStore is a delegating cache store used for situations when only one instance in a cluster should interact with the underlying store. Deprecated: A shared store should be used instead, as this limits store writes to the primary owner of a key</xs:documentation>
+        <xs:documentation>If true, the singleton store cache store is enabled. SingletonStore is a delegating cache store used for situations when only one instance in a cluster should interact with the underlying store.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
     <xs:attribute name="read-only" type="xs:boolean" default="false">
@@ -1836,11 +1874,6 @@
           <xs:documentation>Index all data</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
-      <xs:enumeration value="PRIMARY_OWNER">
-        <xs:annotation>
-          <xs:documentation>Only index changes on the primary owner, regardless of it's local or remote.</xs:documentation>
-        </xs:annotation>
-      </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
 
@@ -2169,4 +2202,3 @@
   </xs:simpleType>
 
 </xs:schema>
-
