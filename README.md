@@ -22,7 +22,7 @@ to parse xml files targeting the new updated schema.
 
 ## Jenkins Job
 
-There are currently 3 jenkins jobs:
+There are currently 3 jenkins jobs. They all seem broken or disabled. See below for manual instructions
 
 1) jboss.org.schema-production  -  rsync down from web server and check for changes. If it finds some, it commits to production branch
 
@@ -33,3 +33,41 @@ There are currently 3 jenkins jobs:
 Before merging any PR, it is important to first make sure jboss.org.schema-production runs in case someone else has updated the remote web server in the interim since the PR was approved.  Once jboss.org.schema-production runs successfully, you can merge in the PR.  The jboss.org.schema-productionToWeb will respond to the change and rsync back up to web server
 
 
+## Manual steps
+    WILDFLYLOC=/home/rob/apps/jboss/unzipped/wildfly-13.0.0.Final.zip.expanded/
+    
+    git clone 	git@github.com:robstryker/jboss.org.schema.git
+    git clone       git@github.com:jbosstools/jbosstools-server.git
+    
+    
+    cd jboss.org.schema/schema_htdocs
+    SCHEMAHTDOCS=`pwd`
+    rsync -rv --protocol=28 --exclude '.*/' --delete 'schema@filemgmt.jboss.org:/schema_htdocs/*' .
+    git add -A && git commit -m "Update from remote webserver to git backup" --signoff
+    
+    cd ../../
+    cd jbosstools-server/as/plugins/org.jboss.tools.as.catalog/
+    CATALOGBUNDLE=`pwd`
+    mvn clean install
+    cd target/classes
+    
+    
+    java  -Djboss.tools.as.catalog.plugin.directory.root=$CATALOGBUNDLE   org.jboss.tools.as.catalog.internal.CopyReleasedSchemaToJBossOrg  $WILDFLYLOC/docs/schema $SCHEMAHTDOCS jbossas
+    
+    cd ../../../../../../jboss.org.schema/schema_htdocs/
+    git add -A && git commit -m "Update latest wildfly release" --signoff
+    
+    # Push this up to the server
+    # We need to push up each folder individually, because our users don't have write permissions to the root folder
+    
+    for d in $(find . -mindepth 1 -maxdepth 1 -type d); do 
+      cd ${d}
+      echo beginning rsync for ${d}
+      rsync -rut --rsh=ssh --protocol=28 . schema@filemgmt.jboss.org:/schema_htdocs/${d}/ --delete -vv
+      # fail with exit code 1 if the rsync fails
+      if [[ $? != 0 ]]; then 
+        echo "RSYNC FAIL"; exit 1
+      fi
+      cd ../
+    done
+    
